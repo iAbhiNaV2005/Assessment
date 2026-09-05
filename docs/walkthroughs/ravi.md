@@ -22,7 +22,7 @@
 | Age | 42 Years | Must | Maximum tenure capped at 23 years |
 | Credit Score | Unknown / No Bureau Record | Must | -5% to both FOIR caps |
 | Collateral Pledged | Unencumbered Premises (₹45,00,000) | Additional | Unlocks secured LAP route; +5% to lender cap |
-| Co-Applicant Available | Spouse (Earning ₹28,000/mo) | Additional | Bridges household capacity to ₹15,00,000 |
+| Co-Applicant Available | Spouse (Earning ₹18,000/mo teaching) | Additional | Bridges household capacity toward ₹15,00,000 |
 | Loan Productivity | High (Delivery vehicle fleet) | Additional | Positive revenue accretion verified |
 
 **Confidence Level:** Narrow (+/- 5% variance band, comprehensive disclosure).

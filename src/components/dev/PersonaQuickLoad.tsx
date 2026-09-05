@@ -1,58 +1,63 @@
 'use client';
 
 /**
- * Persona Quick Load (Dev Tooling)
- * Allows reviewers and recruiters to pre-fill Priya, Ravi, and Anita instantly.
+ * Persona Quick Load (Benchmark Review Tooling)
+ * Pre-fills Priya, Ravi, and Anita with 1-click responsive state updates.
  * Free of emojis.
  */
 
 import React from 'react';
 import { useBorrower } from '../../context/BorrowerContext';
+import { LiquidGlass } from '../LiquidGlass';
 
 interface PersonaQuickLoadProps {
   onLoaded?: () => void;
+  className?: string;
 }
 
-export const PersonaQuickLoad: React.FC<PersonaQuickLoadProps> = ({ onLoaded }) => {
+export const PersonaQuickLoad: React.FC<PersonaQuickLoadProps> = ({ onLoaded, className = '' }) => {
   const { loadPersona, activePersona, resetAnswers } = useBorrower();
 
   const personas = [
     {
       key: 'priya' as const,
       name: 'Priya',
-      role: 'Salaried, Bengaluru',
-      details: '₹1.10L/mo, 790 Score, ₹8L PL',
+      role: 'Salaried Professional',
+      location: 'Bengaluru',
+      summary: '₹1.10L/mo take-home · 780 CIBIL · ₹8L Personal Loan',
       expected: 'Verdict: Borrow',
-      expectedColor: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10',
+      verdictColor: 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/25',
     },
     {
       key: 'ravi' as const,
       name: 'Ravi',
-      role: 'Self-Employed, Mysuru',
-      details: '₹38k/mo assessed, ₹45L Premises, ₹15L Ask',
+      role: 'Self-Employed Retailer',
+      location: 'Mysuru',
+      summary: '₹38k/mo assessed · ₹45L Shop Premises · ₹15L Ask',
       expected: 'Verdict: Borrow less',
-      expectedColor: 'text-amber-400 border-amber-500/30 bg-amber-500/10',
+      verdictColor: 'text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/25',
     },
     {
       key: 'anita' as const,
       name: 'Anita',
-      role: 'Informal Gig, Hubballi',
-      details: '₹21k/mo, 3 App Loans, Recent Bounce',
+      role: 'Informal Gig Worker',
+      location: 'Hubballi',
+      summary: '₹22.4k/mo · 3 High-Cost Apps · Recent Bounce',
       expected: "Verdict: Don't borrow now",
-      expectedColor: 'text-rose-400 border-rose-500/30 bg-rose-500/10',
+      verdictColor: 'text-rose-600 dark:text-rose-400 bg-rose-500/10 border-rose-500/25',
     },
   ];
 
   return (
-    <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-4 mb-6 shadow-sm">
+    <div className={`w-full ${className}`}>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-        <div>
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-            Dev Quick-Load Presets
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-semibold uppercase tracking-wider text-ink-muted dark:text-ink-muted-dark">
+            Benchmark Personas
           </span>
-          <p className="text-xs text-slate-500">
-            Pre-fills assessment inputs to test canonical personas end-to-end.
-          </p>
+          <span className="text-[11px] text-ink-muted/80 dark:text-ink-muted-dark/80">
+            · Fast test presets for evaluation
+          </span>
         </div>
         <button
           type="button"
@@ -60,13 +65,13 @@ export const PersonaQuickLoad: React.FC<PersonaQuickLoadProps> = ({ onLoaded }) 
             resetAnswers();
             if (onLoaded) onLoaded();
           }}
-          className="text-xs text-slate-400 hover:text-white px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 transition-colors self-start sm:self-auto"
+          className="text-xs text-ink-muted dark:text-ink-muted-dark hover:text-ink dark:hover:text-ink-dark transition-colors self-start sm:self-auto underline decoration-dotted underline-offset-2"
         >
-          Reset to Clean State
+          Reset to Blank
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {personas.map((p) => {
           const isActive = activePersona === p.key;
           return (
@@ -77,20 +82,30 @@ export const PersonaQuickLoad: React.FC<PersonaQuickLoadProps> = ({ onLoaded }) 
                 loadPersona(p.key);
                 if (onLoaded) onLoaded();
               }}
-              className={`text-left p-3 rounded-lg border transition-all ${
+              className={`text-left p-4 rounded-2xl border transition-all relative overflow-hidden group ${
                 isActive
-                  ? 'bg-blue-600/20 border-blue-500 ring-1 ring-blue-500'
-                  : 'bg-slate-950/60 border-slate-800 hover:border-slate-700 hover:bg-slate-800/40'
+                  ? 'bg-plum-50/90 dark:bg-plum-950/60 border-plum-900/60 dark:border-plum-400/60 shadow-glass'
+                  : 'bg-white/60 dark:bg-surface-dark/60 border-rule-light dark:border-rule-dark hover:border-plum-400/50 hover:bg-white/90 dark:hover:bg-surface-dark/90'
               }`}
             >
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-semibold text-white">{p.name}</span>
-                <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${p.expectedColor}`}>
+              <div className="flex items-start justify-between gap-2 mb-1.5">
+                <div>
+                  <span className="font-display font-medium text-base text-ink dark:text-ink-dark group-hover:text-plum-900 dark:group-hover:text-plum-300 transition-colors">
+                    {p.name}
+                  </span>
+                  <span className="text-xs text-ink-muted dark:text-ink-muted-dark block">
+                    {p.role} · {p.location}
+                  </span>
+                </div>
+                <span
+                  className={`text-[10px] font-mono px-2 py-0.5 rounded-full border shrink-0 font-medium ${p.verdictColor}`}
+                >
                   {p.expected}
                 </span>
               </div>
-              <p className="text-xs text-slate-400 mb-0.5">{p.role}</p>
-              <p className="text-[11px] font-mono text-slate-500">{p.details}</p>
+              <p className="text-[11px] font-mono text-ink-muted dark:text-ink-muted-dark mt-2 line-clamp-1">
+                {p.summary}
+              </p>
             </button>
           );
         })}

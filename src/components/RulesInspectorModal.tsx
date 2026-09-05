@@ -14,7 +14,9 @@ export const RulesInspectorModal: React.FC<RulesInspectorModalProps> = ({
   onClose,
   firedRules,
 }) => {
-  const [activeTab, setActiveTab] = useState<'fired' | 'all'>('fired');
+  const [activeTab, setActiveTab] = useState<'fired' | 'all'>(
+    firedRules.length > 0 ? 'fired' : 'all'
+  );
   const [categoryFilter, setCategoryFilter] = useState<string>('ALL');
 
   if (!isOpen) return null;

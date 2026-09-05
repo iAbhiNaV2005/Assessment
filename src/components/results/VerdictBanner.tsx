@@ -2,12 +2,13 @@
 
 /**
  * O1 Verdict Banner Component
- * Displays verdict (Borrow / Borrow less / Don't borrow now), rationale, and remediation roadmap.
- * Free of emojis.
+ * Executive credit decision presentation with contextual status styling and remediation roadmap.
+ * Built with Apple Liquid Glass aesthetics and zero emojis.
  */
 
 import React from 'react';
 import { VerdictResult } from '../../../lib/engine';
+import { LiquidGlass } from '../LiquidGlass';
 
 interface VerdictBannerProps {
   verdict: VerdictResult;
@@ -18,25 +19,25 @@ export const VerdictBanner: React.FC<VerdictBannerProps> = ({ verdict }) => {
     switch (verdict.verdict) {
       case 'Borrow':
         return {
-          badgeBg: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
-          border: 'border-emerald-500/40',
-          gradient: 'from-emerald-950/40 via-slate-900 to-slate-900',
-          textColor: 'text-emerald-400',
+          badge: 'bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border-emerald-500/30',
+          border: 'border-emerald-500/30',
+          textColor: 'text-emerald-800 dark:text-emerald-300',
+          tint: 'from-emerald-50/50 via-white/80 to-white/60 dark:from-emerald-950/30 dark:via-surface-dark/80 dark:to-surface-dark/60',
         };
       case 'Borrow less':
         return {
-          badgeBg: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
-          border: 'border-amber-500/40',
-          gradient: 'from-amber-950/40 via-slate-900 to-slate-900',
-          textColor: 'text-amber-400',
+          badge: 'bg-amber-500/10 text-amber-800 dark:text-amber-300 border-amber-500/30',
+          border: 'border-amber-500/30',
+          textColor: 'text-amber-800 dark:text-amber-300',
+          tint: 'from-amber-50/50 via-white/80 to-white/60 dark:from-amber-950/30 dark:via-surface-dark/80 dark:to-surface-dark/60',
         };
       case "Don't borrow now":
       default:
         return {
-          badgeBg: 'bg-rose-500/15 text-rose-400 border-rose-500/30',
-          border: 'border-rose-500/40',
-          gradient: 'from-rose-950/40 via-slate-900 to-slate-900',
-          textColor: 'text-rose-400',
+          badge: 'bg-rose-500/10 text-rose-800 dark:text-rose-300 border-rose-500/30',
+          border: 'border-rose-500/30',
+          textColor: 'text-rose-800 dark:text-rose-300',
+          tint: 'from-rose-50/50 via-white/80 to-white/60 dark:from-rose-950/30 dark:via-surface-dark/80 dark:to-surface-dark/60',
         };
     }
   };
@@ -44,61 +45,66 @@ export const VerdictBanner: React.FC<VerdictBannerProps> = ({ verdict }) => {
   const theme = getTheme();
 
   return (
-    <div
-      className={`w-full bg-gradient-to-br ${theme.gradient} border ${theme.border} rounded-2xl p-6 sm:p-8 shadow-xl mb-8`}
+    <LiquidGlass
+      variant="highlight"
+      className={`w-full mb-8 border ${theme.border} bg-gradient-to-br ${theme.tint}`}
     >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
         <div>
-          <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400">
-            Output 1 — Overall Verdict
+          <span className="text-[11px] font-semibold uppercase tracking-widest text-ink-muted dark:text-ink-muted-dark">
+            Output 1 · Assessment Verdict
           </span>
           <div className="flex items-center gap-3 mt-1">
-            <h1 className={`text-2xl sm:text-3xl font-bold tracking-tight ${theme.textColor}`}>
+            <h1 className={`text-2xl sm:text-4xl font-display font-semibold tracking-tight ${theme.textColor}`}>
               {verdict.verdict}
             </h1>
-            <span
-              className={`text-xs px-3 py-1 rounded-full font-semibold border ${theme.badgeBg}`}
-            >
+            <span className={`text-xs px-3 py-1 rounded-full font-medium border ${theme.badge}`}>
               {verdict.isHardBlock ? 'Hard Block Triggered' : 'Cashflow Feasible'}
             </span>
           </div>
         </div>
 
-        <div className="text-right sm:max-w-xs">
-          <span className="text-xs text-slate-400 block font-medium">Recommended Action</span>
-          <span className="text-xs text-slate-200 font-medium block mt-0.5">
+        <div className="sm:text-right sm:max-w-xs">
+          <span className="text-xs text-ink-muted dark:text-ink-muted-dark font-medium block">
+            Recommended Action
+          </span>
+          <span className="text-xs text-ink dark:text-ink-dark font-semibold block mt-0.5 leading-snug">
             {verdict.recommendedAction}
           </span>
         </div>
       </div>
 
-      <div className="bg-slate-950/70 rounded-xl p-4 border border-slate-800/80 mb-4">
-        <p className="text-sm text-slate-200 font-medium mb-2">{verdict.primaryReason}</p>
+      {/* Rationale and Factors */}
+      <div className="bg-white/60 dark:bg-surface-dark/60 rounded-xl p-4 border border-rule-light/80 dark:border-rule-dark/80 mb-4">
+        <p className="text-sm font-medium text-ink dark:text-ink-dark mb-2.5">
+          {verdict.primaryReason}
+        </p>
         <ul className="space-y-1.5">
           {verdict.contributingFactors.map((factor, idx) => (
-            <li key={idx} className="text-xs text-slate-400 flex items-start gap-2">
-              <span className="text-slate-600 font-mono shrink-0">•</span>
+            <li key={idx} className="text-xs text-ink-muted dark:text-ink-muted-dark flex items-start gap-2">
+              <span className="text-plum-900 dark:text-plum-400 font-mono shrink-0">•</span>
               <span>{factor}</span>
             </li>
           ))}
         </ul>
       </div>
 
+      {/* Debt Remediation Roadmap for Hard Block */}
       {verdict.debtRemediationRoadmap && verdict.debtRemediationRoadmap.length > 0 && (
-        <div className="bg-rose-950/20 border border-rose-900/40 rounded-xl p-4">
-          <span className="text-xs font-semibold text-rose-300 uppercase tracking-wider block mb-2">
+        <div className="bg-rose-500/5 dark:bg-rose-950/20 border border-rose-500/20 rounded-xl p-4 mt-4">
+          <span className="text-xs font-semibold text-rose-800 dark:text-rose-300 uppercase tracking-wider block mb-2">
             Actionable Debt Remediation Roadmap
           </span>
           <ol className="space-y-2">
             {verdict.debtRemediationRoadmap.map((step, idx) => (
-              <li key={idx} className="text-xs text-rose-200 flex items-start gap-2.5">
-                <span className="font-mono text-rose-400 font-bold shrink-0">{idx + 1}.</span>
+              <li key={idx} className="text-xs text-rose-900 dark:text-rose-200 flex items-start gap-2.5 leading-relaxed">
+                <span className="font-mono text-rose-600 dark:text-rose-400 font-bold shrink-0">{idx + 1}.</span>
                 <span>{step}</span>
               </li>
             ))}
           </ol>
         </div>
       )}
-    </div>
+    </LiquidGlass>
   );
 };

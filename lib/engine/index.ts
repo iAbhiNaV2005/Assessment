@@ -157,8 +157,8 @@ export const CANONICAL_PERSONAS: Record<string, Partial<BorrowerProfile>> = {
     yearsInJobOrBusiness: 5,
     existingEmiTotal: 14000,
     essentialExpenses: 40000,
-    age: 31,
-    creditScore: 790,
+    age: 29,
+    creditScore: 780,
     variableIncomeShare: 0.10,
     hasCreditCard: true,
     creditCardUtilisation: 22,
@@ -190,7 +190,7 @@ export const CANONICAL_PERSONAS: Record<string, Partial<BorrowerProfile>> = {
     hasBounceInLast12Months: false,
     savingsBufferMonths: 3,
     hasCoApplicant: false,
-    coApplicantMonthlyIncome: 28000, // Available to bridge if added
+    coApplicantMonthlyIncome: 18000, // Wife earns 18k teaching
     isProductiveLoan: true,
     expectedMonthlyReturn: 35000,
     isReturnVerified: true,
@@ -198,15 +198,15 @@ export const CANONICAL_PERSONAS: Record<string, Partial<BorrowerProfile>> = {
   },
   anita: {
     purpose: 'personal_vehicle',
-    amountWanted: 45000,
+    amountWanted: 150000, // Electric scooter to double delivery runs
     employmentType: 'informal_gig',
     netMonthlyIncome: 28000,
-    incomeMin: 25000,
-    incomeMax: 31000,
+    incomeMin: 26000,
+    incomeMax: 30000,
     yearsInJobOrBusiness: 3,
-    existingEmiTotal: 9500, // 3 app loans at 30%+ APR
+    existingEmiTotal: 9500, // 3 app loans at 30%+ APR (35k outstanding)
     essentialExpenses: 14000,
-    age: 27,
+    age: 35,
     creditScore: 'unknown',
     hasHighCostDebt: true,
     highCostDebtShare: 1.0, // 100% of existing debt is high-cost app debt
@@ -217,7 +217,7 @@ export const CANONICAL_PERSONAS: Record<string, Partial<BorrowerProfile>> = {
     collateralType: 'vehicle', // Vehicle hypothecation does not count as strong collateral
     hasPriorLoanHistory: false,
     hasCoApplicant: false,
-    isProductiveLoan: false,
+    isProductiveLoan: true, // Productive EV scooter
     informalDigitalPaymentHistory: true,
     answeredQuestionIds: ['q1_purpose', 'q2_amount_wanted', 'q3_employment_type', 'q4_income', 'q5_years_experience', 'q6_existing_emis', 'q7_essential_expenses', 'q8_age', 'q9_credit_score', 'q11_high_cost_debt', 'q13_recent_bounces', 'q14_savings_buffer', 'q15_collateral', 'q20_informal_digital_footprint'],
   },

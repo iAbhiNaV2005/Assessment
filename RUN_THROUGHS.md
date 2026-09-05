@@ -4,14 +4,14 @@ This document details the exact execution traces, adaptive questions, four core 
 
 ---
 
-## Persona 1: Priya, 31 (Bengaluru · Salaried)
+## Persona 1: Priya, 29 (Bengaluru · Salaried)
 
 ### 1. Profile Summary & Inputs
-- **Demographics**: 31 years old, Bengaluru, Senior Software Engineer at a technology MNC for 5 years.
+- **Demographics**: 29 years old, Bengaluru, Senior Software Engineer at a technology MNC for 5 years.
 - **Income**: Net monthly take-home salary of ₹1,10,000.
-- **Existing Debt**: 1 car loan, monthly EMI ₹14,000.
-- **Living Costs**: Essential monthly household expenses ₹40,000.
-- **Credit Profile**: Verified CIBIL score of 790 (Prime).
+- **Existing Debt**: 1 car loan, monthly EMI ₹14,000 (2 years left).
+- **Living Costs**: Rents at ₹28,000; total household expenses ₹40,000.
+- **Credit Profile**: Verified CIBIL score of 780 (Prime).
 - **The Ask**: Wants a **₹8,00,000 personal loan** for wedding expenses.
 - **Savings Buffer**: 6 months of living expenses.
 - **Collateral**: None (unsecured personal loan).
@@ -122,20 +122,20 @@ This document details the exact execution traces, adaptive questions, four core 
 - **Living Costs**: Essential monthly expenses ₹20,000.
 - **Credit Profile**: Unscored / No bureau history.
 - **Collateral**: Owns unencumbered commercial premises worth ₹45,00,000.
-- **Co-Applicant**: Spouse employed in school administration earning ₹28,000/mo.
-- **The Ask**: Wants a **₹15,00,000 loan** to purchase delivery vehicles.
+- **Co-Applicant**: Spouse employed in school teaching earning ₹18,000/mo.
+- **The Ask**: Wants a **₹15,00,000 loan** for a second stock line and delivery vehicle.
 
 ### 2. Adaptive Questions Asked & Visibility Logic
 1. *What is the loan purpose?* → **Commercial Vehicle / Fleet Expansion (Productive)**
 2. *How much do you want to borrow?* → **₹15,00,000**
 3. *What is your employment type?* → **Self-Employed (Formal with ITR)**
-4. *What is your ITR income and cash income?* → **ITR ₹4.2L/yr, Cash ₹60k/mo**
+4. *What is your ITR income and cash income?* → **ITR ₹4.2L/yr, Cash ₹60k/mo (₹40k-80k/mo range)**
 5. *What share of income is variable?* → **45% (High)** (20% volatility haircut)
 6. *How long have you been in business?* → **14 Years** (Max 50 bps stability concession)
 7. *What are your essential expenses?* → **₹20,000**
 8. *Credit score?* → **Unknown** (-5% to both FOIR caps)
 9. *Collateral available?* → **Property: Commercial Premises (₹45,00,000)** (+5% to lender FOIR; unlocks secured LAP band)
-10. *Co-applicant with income?* → **Spouse earning ₹28,000/mo**
+10. *Co-applicant with income?* → **Spouse earning ₹18,000/mo**
 
 ---
 
@@ -208,18 +208,18 @@ This document details the exact execution traces, adaptive questions, four core 
 
 ---
 
-## Persona 3: Anita, 27 (Hubballi · Informal Gig)
+## Persona 3: Anita, 35 (Hubballi · Informal Gig)
 
 ### 1. Profile Summary & Inputs
-- **Demographics**: 27 years old, Hubballi, food delivery rider and home tailoring worker for 3 years.
-- **Income**: Declared income range ₹25,000 to ₹31,000 (Midpoint ₹28,000). Regular UPI QR receipts mitigate haircut by 5% (net 20% haircut).
+- **Demographics**: 35 years old, Hubballi, delivery-platform rider and home tailoring worker for 3 years; two children, husband unemployed 8 months.
+- **Income**: Declared income range ₹26,000 to ₹30,000 (Midpoint ₹28,000). Regular UPI QR receipts mitigate haircut by 5% (net 20% haircut).
 - **Assessed Income**: **₹22,400 / month**.
-- **Existing Debt**: ₹9,500/month across 3 instant credit apps at 30%+ APR (consumes 42.4% of assessed income).
-- **Payment Bounces**: 1 NACH debit return in the last 30 days.
-- **Living Costs**: Essential expenses ₹14,000/month (Rent + Food + Fuel).
+- **Existing Debt**: ₹35,000 outstanding across 3 app loans at 30%+ APR (monthly EMIs ₹9,500, consuming 42.4% of assessed income).
+- **Payment Bounces**: 1 EMI / auto-debit return in the last 30 days.
+- **Living Costs**: Essential expenses ₹14,000/month.
 - **Savings Buffer**: Less than 1 month (zero emergency reserve).
-- **The Ask**: Wants a **₹45,000 loan** for an electric two-wheeler (scooter).
-- **Loan Purpose**: Personal vehicle (evaluated as unsecured for hard-block checks).
+- **The Ask**: Wants a **₹1,50,000 loan** for an electric scooter to double delivery runs.
+- **Loan Purpose**: Productive vehicle asset (evaluated under distress criteria due to active default risk).
 
 ---
 
@@ -256,7 +256,7 @@ Rather than encouraging fresh debt that would precipitate insolvency, Lokta supp
                      LOKTA BORROWER NEGOTIATION CARD
 ========================================================================
 1. LOAN TYPE & STATUS:
-   Personal Two-Wheeler · ₹45,000 requested · APPLICATION DEFERRED
+   Electric Scooter · ₹1,50,000 requested · APPLICATION DEFERRED
 
 2. FAIR RATE WARNING:
    Avoid fresh borrowings; existing debt exceeds 24% threshold.

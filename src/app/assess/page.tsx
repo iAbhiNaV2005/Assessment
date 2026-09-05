@@ -3,8 +3,7 @@
 /**
  * Question Wizard Page (/assess)
  * Adaptive step-by-step questionnaire with dynamic confidence narrowing.
- * Follows Section 2.2 and Section 4 of the implementation plan.
- * Free of emojis.
+ * Uses shared Header, Apple Liquid Glass aesthetic, and dual theme styling. Zero emojis.
  */
 
 import React, { useState, useMemo } from 'react';
@@ -12,9 +11,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useBorrower } from '../../context/BorrowerContext';
 import { QUESTIONS_LIST } from '../../../lib/engine';
+import { Header } from '../../components/Header';
 import { QuestionStep } from '../../components/wizard/QuestionStep';
 import { ProgressConfidenceBar } from '../../components/wizard/ProgressConfidenceBar';
 import { PersonaQuickLoad } from '../../components/dev/PersonaQuickLoad';
+import { LiquidGlass } from '../../components/LiquidGlass';
 
 export default function AssessPage() {
   const router = useRouter();
@@ -50,71 +51,76 @@ export default function AssessPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between">
-      {/* Header */}
-      <header className="border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-white text-sm">
-              L
+    <div className="min-h-screen bg-[var(--bg-canvas)] text-[var(--text-primary)] flex flex-col justify-between transition-colors duration-300">
+      <Header />
+
+      {/* Main Wizard Area */}
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex-1 w-full">
+        {/* Secondary Subnav / Controls */}
+        <div className="flex items-center justify-between gap-3 mb-6">
+          <div className="flex items-center gap-2">
+            <span className="text-xs uppercase tracking-wider font-semibold text-[var(--accent)]">
+              Assessment Wizard
             </span>
-            <span className="font-bold text-base tracking-tight text-white">
-              Lokta <span className="text-slate-400 font-normal">Assessment</span>
+            <span className="text-xs text-[var(--text-tertiary)]">|</span>
+            <span className="text-xs text-[var(--text-tertiary)] num-mono">
+              Step {clampedStepIndex + 1} of {visibleQuestions.length}
             </span>
-          </Link>
+          </div>
 
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => setShowDevBar(!showDevBar)}
-              className="text-xs text-slate-400 hover:text-slate-200 px-2.5 py-1 rounded bg-slate-900 border border-slate-800"
+              className="text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] px-2.5 py-1 rounded-lg bg-[var(--glass-subtle)] border border-[var(--border-subtle)] transition-colors"
             >
-              {showDevBar ? 'Hide Dev Presets' : 'Show Dev Presets'}
+              {showDevBar ? 'Hide Presets' : 'Show Presets'}
             </button>
             <Link
               href="/result"
-              className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200"
+              className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-[var(--glass-subtle)] hover:bg-[var(--glass-bg)] border border-[var(--border-subtle)] text-[var(--text-primary)] transition-all"
             >
               Skip to Results
             </Link>
           </div>
         </div>
-      </header>
 
-      {/* Main Wizard Area */}
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 flex-1 w-full">
         {/* Dev Quick Load Toolbar */}
         {showDevBar && (
-          <PersonaQuickLoad
-            onLoaded={() => {
-              setCurrentStepIndex(0);
-            }}
-          />
+          <div className="mb-6">
+            <PersonaQuickLoad
+              onLoaded={() => {
+                setCurrentStepIndex(0);
+              }}
+            />
+          </div>
         )}
 
         {/* Confidence & Progress Bar */}
         {currentQuestion && (
-          <ProgressConfidenceBar
-            currentStepIndex={clampedStepIndex}
-            totalStepsCount={visibleQuestions.length}
-            mustQuestionsCount={QUESTIONS_LIST.filter((q) => q.isMust).length}
-            answeredCount={evaluation.metrics.answeredAdditionalQuestionsCount}
-            confidence={{
-              confidenceLevel: evaluation.metrics.confidenceLevel,
-              answeredCount: evaluation.metrics.answeredAdditionalQuestionsCount,
-              applicableCount: evaluation.metrics.applicableAdditionalQuestionsCount,
-              ratio: evaluation.metrics.confidenceRatio,
-              percentageText: `${Math.round(evaluation.metrics.confidenceRatio * 100)}%`,
-              varianceFraction: 0.1,
-              guidanceMessage:
-                evaluation.metrics.confidenceLevel === 'narrow'
-                  ? 'High precision estimate based on comprehensive borrower profile disclosure.'
-                  : evaluation.metrics.confidenceLevel === 'medium'
-                  ? 'Moderate precision estimate. Providing collateral and expense specifics will tighten these numbers further.'
-                  : 'Based on the minimum information. Answer more questions to narrow this band.',
-              unknownAssumptions: [],
-            }}
-          />
+          <div className="mb-8">
+            <ProgressConfidenceBar
+              currentStepIndex={clampedStepIndex}
+              totalStepsCount={visibleQuestions.length}
+              mustQuestionsCount={QUESTIONS_LIST.filter((q) => q.isMust).length}
+              answeredCount={evaluation.metrics.answeredAdditionalQuestionsCount}
+              confidence={{
+                confidenceLevel: evaluation.metrics.confidenceLevel,
+                answeredCount: evaluation.metrics.answeredAdditionalQuestionsCount,
+                applicableCount: evaluation.metrics.applicableAdditionalQuestionsCount,
+                ratio: evaluation.metrics.confidenceRatio,
+                percentageText: `${Math.round(evaluation.metrics.confidenceRatio * 100)}%`,
+                varianceFraction: 0.1,
+                guidanceMessage:
+                  evaluation.metrics.confidenceLevel === 'narrow'
+                    ? 'High precision estimate based on comprehensive borrower profile disclosure.'
+                    : evaluation.metrics.confidenceLevel === 'medium'
+                    ? 'Moderate precision estimate. Providing collateral and expense specifics will tighten these numbers further.'
+                    : 'Based on the minimum information. Answer more questions to narrow this band.',
+                unknownAssumptions: [],
+              }}
+            />
+          </div>
         )}
 
         {/* Active Question Step */}
@@ -130,23 +136,28 @@ export default function AssessPage() {
             onFinish={handleFinish}
           />
         ) : (
-          <div className="text-center py-12">
-            <p className="text-slate-400">All questions completed.</p>
+          <LiquidGlass intensity="medium" className="text-center py-12 rounded-2xl p-8 border border-[var(--glass-border)]">
+            <h3 className="text-xl font-display font-medium text-[var(--text-primary)] mb-2">
+              All questions completed
+            </h3>
+            <p className="text-xs text-[var(--text-secondary)] mb-6">
+              Your financial capacity and underwriting metrics have been fully calculated.
+            </p>
             <button
               type="button"
               onClick={handleFinish}
-              className="mt-4 px-6 py-2.5 rounded-lg bg-blue-600 text-white font-semibold"
+              className="px-6 py-2.5 rounded-xl bg-[var(--accent)] text-white dark:text-slate-950 font-semibold text-sm shadow-md"
             >
-              View Results
+              View Results &amp; Negotiation Card
             </button>
-          </div>
+          </LiquidGlass>
         )}
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800/80 py-4 text-center text-xs text-slate-500">
+      <footer className="border-t border-[var(--border-subtle)] py-4 text-center text-xs text-[var(--text-tertiary)]">
         <div className="max-w-4xl mx-auto px-4">
-          Lokta Copilot · Answers never leave your browser tab · Cleared on tab close
+          Lokta Copilot · Answers never leave your browser memory · Zero persistent storage
         </div>
       </footer>
     </div>

@@ -1,8 +1,8 @@
 # Borrower Copilot Persona Walkthrough: Anita
 
 **Segment:** Informal Gig Delivery & Home Tailoring, Hubballi  
-**Loan Purpose:** Personal Two-Wheeler (Scooter)  
-**Amount Requested:** ₹45,000  
+**Loan Purpose:** Electric Two-Wheeler (Scooter to double delivery runs)  
+**Amount Requested:** ₹1,50,000  
 
 ---
 
@@ -10,8 +10,8 @@
 
 | Question | Value Provided | Category | Underwriting Impact |
 |---|---|---|---|
-| Loan Purpose | Personal Vehicle (Two-Wheeler) | Must | Evaluated as effectively unsecured for hard blocks |
-| Amount Wanted | ₹45,000 | Must | Checked against existing debt load |
+| Loan Purpose | Productive Vehicle (Electric Scooter) | Must | Evaluated under debt distress checks |
+| Amount Wanted | ₹1,50,000 | Must | Checked against existing debt load |
 | Employment Type | Informal / Gig Worker (No ITR) | Must | Subject to flat documentation haircut |
 | Declared Income Range | ₹25,000 to ₹31,000 (Midpoint ₹28,000) | Must | Evaluated for gig seasonality |
 | UPI Footprint | Regular UPI QR transaction history | Additional | 5% haircut mitigation (20% net haircut) |
@@ -57,7 +57,7 @@ Rather than encouraging fresh debt that would precipitate insolvency, Lokta supp
 
 ## 4. Negotiation Card (Remediation Variant)
 
-1. **Loan Type & Status:** Personal Two-Wheeler · ₹45,000 requested · **Application Deferred**
+1. **Loan Type & Status:** Electric Two-Wheeler · ₹1,50,000 requested · **Application Deferred**
 2. **Fair Rate Warning:** Avoid fresh borrowings; existing debt exceeds 24% threshold.
 3. **Primary Factor:** 100% of existing monthly obligations are held in high-cost instant credit lines with a recent auto-debit failure.
 4. **Safe EMI Ceiling:** **₹0 / month fresh debt** until existing app loans are consolidated or cleared.

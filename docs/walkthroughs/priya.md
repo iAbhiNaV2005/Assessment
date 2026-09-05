@@ -17,8 +17,8 @@
 | Years in Job | 5 Years | Must | Qualifies for 20 bps stability discount |
 | Existing Monthly EMIs | ₹14,000 | Must | Subtracted from available FOIR capacity |
 | Essential Monthly Expenses | ₹40,000 | Must | Evaluated in 15% residual income check |
-| Age | 31 Years | Must | Max tenure comfortably allows standard terms |
-| Credit Score | 790 (CIBIL Prime) | Must | Prime tier: lowest spreads, max 24x multiple |
+| Age | 29 Years | Must | Max tenure comfortably allows standard terms |
+| Credit Score | 780 (CIBIL Prime) | Must | Prime tier: lowest spreads, max 24x multiple |
 | Variable Income Share | 10% (Stable base) | Additional | 0% volatility haircut |
 | Credit Card Utilisation | 22% of limit | Additional | Disciplined revolving credit behavior |
 | Recent Payment Bounces | None (Clean record) | Additional | Zero penalty |

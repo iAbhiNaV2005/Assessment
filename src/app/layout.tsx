@@ -39,7 +39,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${newsreader.variable} ${sourceSans.variable} ${ibmPlexMono.variable}`}>
-      <body className="bg-slate-950 text-slate-100 font-body min-h-[100dvh] antialiased selection:bg-blue-600 selection:text-white">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function() {
+              try {
+                var theme = localStorage.getItem('lokta_theme');
+                if (theme === 'dark') {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              } catch (e) {}
+            })();`,
+          }}
+        />
+      </head>
+      <body className="bg-bg-light dark:bg-bg-dark text-ink dark:text-ink-dark font-body min-h-[100dvh] antialiased selection:bg-plum-900 selection:text-white dark:selection:bg-plum-300 dark:selection:text-plum-950">
         <BorrowerProvider>
           {children}
         </BorrowerProvider>

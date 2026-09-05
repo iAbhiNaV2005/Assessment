@@ -128,9 +128,9 @@ Validates zero TypeScript errors, clean static chunk generation, and zero SSR hy
 
 | Persona | Segment | Request | Assessed Income | Verdict | Key Underwriting Rationale |
 |---|---|---|---|---|---|
-| **Priya** | Salaried, Bengaluru | ₹8,00,000 PL | ₹1,10,000/mo (0% haircut) | **Borrow** | Ask sits safely within ₹10,72,000 safe capacity. Prime CIBIL (790) qualifies for 11.80% rate + 12.39% APR. Survives combined stress test. |
+| **Priya** | Salaried, Bengaluru | ₹8,00,000 PL | ₹1,10,000/mo (0% haircut) | **Borrow** | Ask sits safely within ₹10,72,000 safe capacity. Prime CIBIL (780) qualifies for 11.80% rate + 12.39% APR. Survives combined stress test. |
 | **Ravi** | Self-Employed, Mysuru | ₹15,00,000 Fleet | ₹38,000/mo (blended ITR + cash, 20% haircut) | **Borrow less** | Individually supports ₹6,59,000 safe amount (~₹10L lender sanction). Commercial premises (₹45L) unlocks secured 11.35% LAP. Adding wife as co-applicant bridges household capacity to ₹15L+. |
-| **Anita** | Informal Gig, Hubballi | ₹45,000 Scooter | ₹22,400/mo (20% net haircut with UPI) | **Don't borrow now** | Fails Hard Block H3 (100% of existing debt is in 30%+ instant apps) and H2 (recent bounce in last 30 days). Displays 4-step debt remediation roadmap. |
+| **Anita** | Informal Gig, Hubballi | ₹1,50,000 Scooter | ₹22,400/mo (20% net haircut with UPI) | **Don't borrow now** | Fails Hard Block H3 (100% of existing debt is in 30%+ instant apps) and H2 (recent bounce in last 30 days). Displays 4-step debt remediation roadmap. |
 
 Detailed end-to-end trace logs for each persona are documented in [`docs/walkthroughs/`](./docs/walkthroughs/).
 

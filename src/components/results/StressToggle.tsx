@@ -3,11 +3,12 @@
 /**
  * Stress Test Toggle & Results Component
  * Simulates a single combined worst-case shock (-25% income AND +150 bps interest rate).
- * Free of emojis.
+ * Apple Liquid Glass styling with dual theme support. Zero emojis.
  */
 
 import React, { useState } from 'react';
 import { StressTestResult } from '../../../lib/engine';
+import { LiquidGlass } from '../LiquidGlass';
 
 interface StressToggleProps {
   stress: StressTestResult;
@@ -25,113 +26,126 @@ export const StressToggle: React.FC<StressToggleProps> = ({
   const [isStressedView, setIsStressedView] = useState(true);
 
   return (
-    <div className="w-full bg-slate-900/80 backdrop-blur-xl border border-slate-800/90 rounded-2xl p-6 sm:p-8 shadow-xl mb-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+    <LiquidGlass
+      intensity="medium"
+      className="p-6 sm:p-8 rounded-2xl mb-8 border border-[var(--glass-border)] transition-all duration-300"
+    >
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6 pb-4 border-b border-[var(--border-subtle)]">
         <div>
-          <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400">
-            Resilience Evaluation
+          <span className="text-xs uppercase tracking-widest text-[var(--text-tertiary)] font-medium">
+            Resilience Audit
           </span>
-          <h2 className="text-xl font-bold text-white tracking-tight mt-1">
-            Combined Worst-Case Stress Test
+          <h2 className="text-2xl font-display font-medium text-[var(--text-primary)] tracking-tight mt-1">
+            Combined Worst-Case Stress Simulation
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Simulates simultaneous -25% income reduction AND +150 bps policy rate hike.
+          <p className="text-xs text-[var(--text-secondary)] mt-1 max-w-xl leading-relaxed">
+            Simulates simultaneous macroeconomic contraction: a 25% drop in net household earnings alongside a 150 bps policy rate hike transmitted directly into your loan.
           </p>
         </div>
 
-        {/* Toggle Controls */}
-        <div className="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800 self-start sm:self-auto">
+        {/* Tactile Toggle Controls */}
+        <div className="flex items-center bg-[var(--glass-subtle)] p-1 rounded-xl border border-[var(--border-subtle)] self-start sm:self-auto shrink-0">
           <button
             type="button"
             onClick={() => setIsStressedView(false)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
               !isStressedView
-                ? 'bg-slate-800 text-white shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-[var(--accent)] text-white dark:text-slate-950 font-semibold shadow-sm'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
             }`}
           >
-            Baseline
+            Baseline State
           </button>
           <button
             type="button"
             onClick={() => setIsStressedView(true)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
               isStressedView
-                ? 'bg-rose-600 text-white shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-rose-600 text-white font-semibold shadow-sm'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
             }`}
           >
-            Stressed Scenario
+            Stressed Shock
           </button>
         </div>
       </div>
 
       {/* Comparison Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-        <div className="bg-slate-950/70 border border-slate-800 rounded-xl p-4">
-          <span className="text-xs text-slate-400 font-medium block mb-1">Monthly Income</span>
-          <div className="text-xl font-bold font-mono text-white">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div className="bg-[var(--glass-subtle)] border border-[var(--border-subtle)] rounded-xl p-4 transition-all">
+          <span className="text-xs text-[var(--text-tertiary)] font-medium block mb-1">
+            Monthly Net Income
+          </span>
+          <div className="text-xl sm:text-2xl font-semibold num-mono text-[var(--text-primary)] tracking-tight">
             ₹
             {isStressedView
               ? stress.stressedMonthlyIncome.toLocaleString('en-IN')
               : baseIncome.toLocaleString('en-IN')}
           </div>
           <span
-            className={`text-[11px] font-mono mt-1 block ${
-              isStressedView ? 'text-rose-400' : 'text-slate-500'
+            className={`text-xs num-mono mt-1.5 block font-medium ${
+              isStressedView ? 'text-rose-600 dark:text-rose-400' : 'text-[var(--text-tertiary)]'
             }`}
           >
-            {isStressedView ? '-25% Income Shock' : 'Current Assessed'}
+            {isStressedView ? '-25% Income Shock' : 'Standard Underwriting'}
           </span>
         </div>
 
-        <div className="bg-slate-950/70 border border-slate-800 rounded-xl p-4">
-          <span className="text-xs text-slate-400 font-medium block mb-1">Interest Rate</span>
-          <div className="text-xl font-bold font-mono text-white">
+        <div className="bg-[var(--glass-subtle)] border border-[var(--border-subtle)] rounded-xl p-4 transition-all">
+          <span className="text-xs text-[var(--text-tertiary)] font-medium block mb-1">
+            Benchmark Interest Rate
+          </span>
+          <div className="text-xl sm:text-2xl font-semibold num-mono text-[var(--text-primary)] tracking-tight">
             {isStressedView ? `${stress.stressedRate}%` : `${baseRate}%`}
           </div>
           <span
-            className={`text-[11px] font-mono mt-1 block ${
-              isStressedView ? 'text-rose-400' : 'text-slate-500'
+            className={`text-xs num-mono mt-1.5 block font-medium ${
+              isStressedView ? 'text-rose-600 dark:text-rose-400' : 'text-[var(--text-tertiary)]'
             }`}
           >
-            {isStressedView ? '+150 bps Transmission' : 'Nominal Expected'}
+            {isStressedView ? '+150 bps Transmission' : 'Nominal Assessed Rate'}
           </span>
         </div>
 
-        <div className="bg-slate-950/70 border border-slate-800 rounded-xl p-4">
-          <span className="text-xs text-slate-400 font-medium block mb-1">Post-Loan FOIR</span>
+        <div className="bg-[var(--glass-subtle)] border border-[var(--border-subtle)] rounded-xl p-4 transition-all">
+          <span className="text-xs text-[var(--text-tertiary)] font-medium block mb-1">
+            Post-Loan FOIR Obligation
+          </span>
           <div
-            className={`text-xl font-bold font-mono ${
-              isStressedView && stress.isOverLenderCap ? 'text-rose-400' : 'text-emerald-400'
+            className={`text-xl sm:text-2xl font-semibold num-mono tracking-tight ${
+              isStressedView && stress.isOverLenderCap
+                ? 'text-rose-600 dark:text-rose-400'
+                : 'text-[var(--accent)]'
             }`}
           >
             {Math.round(stress.stressedPostLoanFoir * 100)}%
           </div>
-          <span className="text-[11px] text-slate-500 mt-1 block">
-            {isStressedView && stress.isOverLenderCap ? 'Breaches Lender Cap' : 'Within Safety Cap'}
+          <span className="text-xs text-[var(--text-tertiary)] mt-1.5 block">
+            {isStressedView && stress.isOverLenderCap
+              ? 'Exceeds Prudential 50% Threshold'
+              : 'Safely Within Prudential Limit'}
           </span>
         </div>
       </div>
 
-      {/* Direct Warning Banner if over cap */}
+      {/* Outcome Analysis Box */}
       {stress.isOverLenderCap && stress.warningMessage ? (
-        <div className="bg-rose-950/30 border border-rose-500/40 rounded-xl p-4 text-xs">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="font-bold text-rose-400 uppercase tracking-wider">
-              Stress Threshold Alert:
-            </span>
+        <div className="rounded-xl p-4 text-xs bg-rose-500/10 border border-rose-500/25 text-rose-900 dark:text-rose-200">
+          <div className="font-semibold uppercase tracking-wider mb-1 text-rose-700 dark:text-rose-300">
+            Prudential Threshold Alert
           </div>
-          <p className="text-rose-200 leading-relaxed">{stress.warningMessage}</p>
+          <p className="leading-relaxed">{stress.warningMessage}</p>
         </div>
       ) : (
-        <div className="bg-emerald-950/20 border border-emerald-500/30 rounded-xl p-4 text-xs text-emerald-200">
-          <span className="font-bold text-emerald-400 uppercase tracking-wider block mb-0.5">
-            Shock Absorbent:
+        <div className="rounded-xl p-4 text-xs bg-emerald-500/10 border border-emerald-500/25 text-emerald-900 dark:text-emerald-200">
+          <span className="font-semibold uppercase tracking-wider block mb-1 text-emerald-700 dark:text-emerald-300">
+            Resilient Cushion Confirmed
           </span>
-          Your household maintains positive cashflow buffers even under simultaneous economic contraction and interest rate escalation.
+          <p className="leading-relaxed">
+            Your monthly net cash flows retain healthy operational safety margins even under severe concurrent income disruption and macroeconomic rate tightening.
+          </p>
         </div>
       )}
-    </div>
+    </LiquidGlass>
   );
 };
