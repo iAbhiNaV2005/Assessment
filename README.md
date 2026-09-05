@@ -138,7 +138,7 @@ Detailed end-to-end trace logs for each persona are documented in [`docs/walkthr
 
 ## 5. Submission Guarantees
 
-- **Zero Emojis:** Strictly verified across all source code, UI components, tests, and documentation.
+
 - **Single Source of Truth:** Every constant in `RULES.md` matches `data/rules-config.ts` verbatim.
 - **Explainability:** Every number on the results screen and Negotiation Card can be traced to a single underlying underwriting reason.
 - **Phone-First Responsive Design:** Tested on 375px mobile viewport widths and desktop screens.
