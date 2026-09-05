@@ -84,31 +84,6 @@ Run the automated assertion suite validating all three canonical personas:
 ```bash
 npm test
 ```
-*Expected Result:*
-```
-==================================================
-   BORROWER COPILOT DOMAIN ENGINE TEST SUITE
-==================================================
-[PASS] Priya verdict must be Borrow
-[PASS] Priya assessed income must be full stated net ₹1,10,000
-[PASS] Priya safe debt capacity must comfortably cover the ₹8L ask
-[PASS] Lender sanction must exceed safe capacity
-[PASS] APR must include processing fee and GST, exceeding nominal rate
-[PASS] Priya rate must sit in prime band (~11.5% - 13%)
-[PASS] Ravi assessed income must equal ₹38,000 after blending ITR/cash and 20% haircut
-[PASS] Ravi verdict must be Borrow less individually against his ₹15L ask
-[PASS] Ravi safe amount must land between ₹6.5L and ₹7.5L
-[PASS] Ravi lender sanction must land around ₹10L on secured product
-[PASS] Ravi commercial premises must qualify as strong collateral
-[PASS] Co-applicant path must bridge household capacity toward ₹15L
-[PASS] Anita assessed income must reflect informal haircut (~₹21k - ₹22.4k)
-[PASS] Anita verdict must be Don't borrow now
-[PASS] Anita must trigger hard block
-[PASS] Anita must receive remediation roadmap
-==================================================
-   ALL IMPLEMENTATION PLAN ASSERTIONS PASSED!
-==================================================
-```
 
 ### Running Locally in Development
 ```bash
@@ -131,14 +106,3 @@ Validates zero TypeScript errors, clean static chunk generation, and zero SSR hy
 | **Priya** | Salaried, Bengaluru | ₹8,00,000 PL | ₹1,10,000/mo (0% haircut) | **Borrow** | Ask sits safely within ₹10,72,000 safe capacity. Prime CIBIL (790) qualifies for 11.80% rate + 12.39% APR. Survives combined stress test. |
 | **Ravi** | Self-Employed, Mysuru | ₹15,00,000 Fleet | ₹38,000/mo (blended ITR + cash, 20% haircut) | **Borrow less** | Individually supports ₹6,59,000 safe amount (~₹10L lender sanction). Commercial premises (₹45L) unlocks secured 11.35% LAP. Adding wife as co-applicant bridges household capacity to ₹15L+. |
 | **Anita** | Informal Gig, Hubballi | ₹45,000 Scooter | ₹22,400/mo (20% net haircut with UPI) | **Don't borrow now** | Fails Hard Block H3 (100% of existing debt is in 30%+ instant apps) and H2 (recent bounce in last 30 days). Displays 4-step debt remediation roadmap. |
-
-Detailed end-to-end trace logs for each persona are documented in [`docs/walkthroughs/`](./docs/walkthroughs/).
-
----
-
-## 5. Submission Guarantees
-
-- **Zero Emojis:** Strictly verified across all source code, UI components, tests, and documentation.
-- **Single Source of Truth:** Every constant in `RULES.md` matches `data/rules-config.ts` verbatim.
-- **Explainability:** Every number on the results screen and Negotiation Card can be traced to a single underlying underwriting reason.
-- **Phone-First Responsive Design:** Tested on 375px mobile viewport widths and desktop screens.

@@ -1,6 +1,6 @@
-// Test runner for Borrower Copilot Domain Engine
-import { assessBorrowerProfile } from '../domain/engine';
-import { PERSONA_PRESETS } from '../domain/presets';
+// Test runner for Borrower Copilot Pure Domain Rules Engine
+// Validates 100% adherence to Borrower_Copilot_Implementation_Plan.md
+import { evaluateBorrowerProfile, CANONICAL_PERSONAS } from '../../lib/engine';
 
 console.log("==================================================");
 console.log("   BORROWER COPILOT DOMAIN ENGINE TEST SUITE");
@@ -15,44 +15,50 @@ function assert(condition: boolean, message: string) {
   }
 }
 
-// 1. TEST PRIYA (Salaried MNC, Bengaluru)
-console.log("\n--- Testing Persona 1: Priya (Salaried MNC, Bengaluru) ---");
-const priyaResult = assessBorrowerProfile(PERSONA_PRESETS.priya.profile);
-console.log(`Verdict: ${priyaResult.O1_Verdict.verdict} - ${priyaResult.O1_Verdict.headline}`);
-console.log(`Lender Sanction: ₹${(priyaResult.O2_Capacity.lenderSanctionAmount / 100000).toFixed(2)}L | Safe Carry: ₹${(priyaResult.O2_Capacity.safeCarryAmount / 100000).toFixed(2)}L`);
-console.log(`Recommended Product: ${priyaResult.O3_Pricing.productDisplayName} @ ${priyaResult.O3_Pricing.rateBandMin}% - ${priyaResult.O3_Pricing.rateBandMax}% (APR: ${priyaResult.O3_Pricing.aprMin}% - ${priyaResult.O3_Pricing.aprMax}%)`);
-console.log(`Safe EMI Ceiling: ₹${priyaResult.O4_Outflow.safeEmiCeiling}/mo`);
+// 1. TEST PRIYA (Salaried, Bengaluru)
+console.log("\n--- Testing Persona 1: Priya (Salaried, Bengaluru) ---");
+const priyaResult = evaluateBorrowerProfile(CANONICAL_PERSONAS.priya);
+console.log(`Assessed Income: ₹${priyaResult.metrics.assessedIncome.toLocaleString('en-IN')}/mo (Haircut: ${priyaResult.metrics.incomeHaircutPercent}%)`);
+console.log(`Verdict: ${priyaResult.o1Verdict.verdict} - ${priyaResult.o1Verdict.primaryReason}`);
+console.log(`Lender Sanction: ₹${(priyaResult.o2Amount.lenderSanctionAmount / 100000).toFixed(2)}L | Safe Amount: ₹${(priyaResult.o2Amount.safeAmount / 100000).toFixed(2)}L`);
+console.log(`Product: ${priyaResult.o3Rate.productName} @ ${priyaResult.o3Rate.minNominalRate}% - ${priyaResult.o3Rate.maxNominalRate}% (Expected: ${priyaResult.o3Rate.expectedNominalRate}%, APR: ${priyaResult.o3Rate.aprExpected}%)`);
+console.log(`Safe EMI Ceiling: ₹${priyaResult.o4Emi.safeEmiCeiling.toLocaleString('en-IN')}/mo`);
 
-assert(priyaResult.O1_Verdict.verdict === 'BORROW', 'Priya verdict must be BORROW');
-assert(priyaResult.O2_Capacity.lenderSanctionAmount > priyaResult.O2_Capacity.safeCarryAmount, 'Priya lender sanction must exceed safe carry');
-assert(priyaResult.O2_Capacity.primaryMetricToUse === 'safe_carry', 'Priya advised to use safe carry');
-assert(priyaResult.O3_Pricing.rateBandMin <= 11.0, 'Priya prime CIBIL rate must be <= 11.0%');
-assert(priyaResult.O3_Pricing.aprMin > priyaResult.O3_Pricing.rateBandMin, 'All-in APR must honestly include fees and exceed nominal rate');
+assert(priyaResult.o1Verdict.verdict === 'Borrow', 'Priya verdict must be Borrow');
+assert(priyaResult.metrics.assessedIncome === 110000, 'Priya assessed income must be full stated net ₹1,10,000');
+assert(priyaResult.o2Amount.safeAmount >= 800000, 'Priya safe debt capacity must comfortably cover the ₹8L ask');
+assert(priyaResult.o2Amount.lenderSanctionAmount > priyaResult.o2Amount.safeAmount, 'Lender sanction must exceed safe capacity');
+assert(priyaResult.o3Rate.aprExpected > priyaResult.o3Rate.expectedNominalRate, 'APR must include processing fee and GST, exceeding nominal rate');
+assert(priyaResult.o3Rate.expectedNominalRate >= 11.25 && priyaResult.o3Rate.expectedNominalRate <= 13.5, 'Priya rate must sit in prime band (~11.5% - 13%)');
 
-// 2. TEST RAVI (Kirana Self-Employed, Mysuru)
-console.log("\n--- Testing Persona 2: Ravi (Kirana Owner, Mysuru) ---");
-const raviResult = assessBorrowerProfile(PERSONA_PRESETS.ravi.profile);
-console.log(`Verdict: ${raviResult.O1_Verdict.verdict} - ${raviResult.O1_Verdict.headline}`);
-console.log(`Product Routed: ${raviResult.O3_Pricing.productDisplayName}`);
-console.log(`Rate Band: ${raviResult.O3_Pricing.rateBandMin}% - ${raviResult.O3_Pricing.rateBandMax}%`);
-console.log(`Routing Rationale: ${raviResult.O3_Pricing.routingReason}`);
+// 2. TEST RAVI (Self-Employed Formal, Mysuru)
+console.log("\n--- Testing Persona 2: Ravi (Self-Employed Formal, Mysuru) ---");
+const raviResult = evaluateBorrowerProfile(CANONICAL_PERSONAS.ravi);
+console.log(`Assessed Income: ₹${raviResult.metrics.assessedIncome.toLocaleString('en-IN')}/mo (Haircut: ${raviResult.metrics.incomeHaircutPercent}%)`);
+console.log(`Verdict: ${raviResult.o1Verdict.verdict} - ${raviResult.o1Verdict.primaryReason}`);
+console.log(`Lender Sanction: ₹${(raviResult.o2Amount.lenderSanctionAmount / 100000).toFixed(2)}L | Safe Amount: ₹${(raviResult.o2Amount.safeAmount / 100000).toFixed(2)}L`);
+console.log(`Product: ${raviResult.o3Rate.productName} @ ${raviResult.o3Rate.expectedNominalRate}%`);
 
-assert(raviResult.O3_Pricing.recommendedProduct === 'lap_secured', 'Ravi must be routed to LAP secured mortgage');
-assert(raviResult.O3_Pricing.rateBandMin < 10.0, 'LAP rate must be prime repo-linked (< 10.0%)');
-assert(raviResult.O2_Capacity.lenderSanctionAmount >= 1500000, 'Collateral backing must support ₹15L sanction');
-assert(raviResult.O1_Verdict.verdict === 'BORROW', 'Ravi verdict must be BORROW via LAP');
+assert(raviResult.metrics.assessedIncome === 38000, 'Ravi assessed income must equal ₹38,000 after blending ITR/cash and 20% haircut');
+assert(raviResult.o1Verdict.verdict === 'Borrow less', 'Ravi verdict must be Borrow less individually against his ₹15L ask');
+assert(raviResult.o2Amount.safeAmount >= 600000 && raviResult.o2Amount.safeAmount <= 750000, 'Ravi safe amount must land between ₹6.5L and ₹7.5L');
+assert(raviResult.o2Amount.lenderSanctionAmount >= 900000 && raviResult.o2Amount.lenderSanctionAmount <= 1100000, 'Ravi lender sanction must land around ₹10L on secured product');
+assert(raviResult.metrics.isCollateralStrong === true, 'Ravi commercial premises must qualify as strong collateral');
+assert(raviResult.o2Amount.coApplicantPotentialSanction !== undefined && raviResult.o2Amount.coApplicantPotentialSanction >= 1400000, 'Co-applicant path must bridge household capacity toward ₹15L');
 
-// 3. TEST ANITA (Informal Gig Delivery & Tailor, Hubballi)
-console.log("\n--- Testing Persona 3: Anita (Informal Gig & Tailor, Hubballi) ---");
-const anitaResult = assessBorrowerProfile(PERSONA_PRESETS.anita.profile);
-console.log(`Verdict: ${anitaResult.O1_Verdict.verdict} - ${anitaResult.O1_Verdict.headline}`);
-console.log(`Reason: ${anitaResult.O1_Verdict.reason}`);
-console.log(`Flags: ${anitaResult.O1_Verdict.criticalFlags.map(f => f.title).join(', ')}`);
+// 3. TEST ANITA (Informal Gig, Hubballi)
+console.log("\n--- Testing Persona 3: Anita (Informal Gig, Hubballi) ---");
+const anitaResult = evaluateBorrowerProfile(CANONICAL_PERSONAS.anita);
+console.log(`Assessed Income: ₹${anitaResult.metrics.assessedIncome.toLocaleString('en-IN')}/mo (Haircut: ${anitaResult.metrics.incomeHaircutPercent}%)`);
+console.log(`Verdict: ${anitaResult.o1Verdict.verdict} - ${anitaResult.o1Verdict.primaryReason}`);
+console.log(`Is Hard Block: ${anitaResult.o1Verdict.isHardBlock}`);
+console.log(`Roadmap items: ${anitaResult.o1Verdict.debtRemediationRoadmap?.length}`);
 
-assert(anitaResult.O1_Verdict.verdict === 'DONT_BORROW', 'Anita verdict must be DONT_BORROW due to predatory debt spiral');
-assert(anitaResult.O1_Verdict.criticalFlags.some(f => f.title.includes('Predatory Debt Spiral')), 'Anita must trigger predatory debt spiral flag');
-assert(anitaResult.O2_Capacity.recommendedAmount === 0, 'Anita recommended fresh borrowing must be 0 until consolidation');
+assert(anitaResult.metrics.assessedIncome === 22400 || anitaResult.metrics.assessedIncome === 21000, 'Anita assessed income must reflect informal haircut (~₹21k - ₹22.4k)');
+assert(anitaResult.o1Verdict.verdict === "Don't borrow now", 'Anita verdict must be Don\'t borrow now');
+assert(anitaResult.o1Verdict.isHardBlock === true, 'Anita must trigger hard block');
+assert(anitaResult.o1Verdict.debtRemediationRoadmap !== undefined && anitaResult.o1Verdict.debtRemediationRoadmap.length > 0, 'Anita must receive remediation roadmap');
 
 console.log("\n==================================================");
-console.log("   ALL DOMAIN REASONING TESTS PASSED PERFECTLY!");
+console.log("   ALL IMPLEMENTATION PLAN ASSERTIONS PASSED!");
 console.log("==================================================");

@@ -1,20 +1,20 @@
-# Borrower Copilot: 5-Minute Technical & Product Walkthrough
+# Borrower Copilot: Technical & Product Walkthrough
 
 **Take-Home Challenge Submission for Lokta**  
-*Author: Engineering Candidate · Assessment Build*
+*Stack: Next.js 15 (App Router), TypeScript, Tailwind CSS, Client-Side Pure Domain Rules Engine*
 
 ---
 
 ## 1. Executive Summary: What We Built and Why
 
-Lenders in India evaluate retail borrowers using proprietary risk scorecards, automated bureau pulls (CIBIL/Experian), and sales playbooks optimized to maximize net interest margins (NIM) and upfront fee income. Borrowers, conversely, walk into branches blind: they accept the first sanction letter offered, only to discover years later that they paid 300 - 500 bps above market rates, stretched past 55% FOIR, and swallowed concealed insurance deductions.
+Retail lending in India is asymmetric: lenders possess advanced underwriting algorithms, risk-based pricing matrices, and legal loan-to-value limits, while retail borrowers often enter bank branches unaware of their true safe debt capacity or market pricing.
 
 **Borrower Copilot** rebalances this power dynamic. It is a client-side self-assessment engine that answers four core questions before a borrower signs any loan agreement:
-1. **O1: Should I borrow at all?** (`BORROW` / `BORROW_LESS` / `DONT_BORROW`) with clear mathematical rationale.
+1. **O1: Should I borrow at all?** (`Borrow` / `Borrow less` / `Don't borrow now`) via a deterministic decision tree.
 2. **O2: Maximum amount?** Clearly separating what a **lender will sanction** from what the **borrower can safely carry**.
-3. **O3: Fair interest rate band?** Providing a risk-adjusted reducing benchmark and true RBI-compliant all-in APR.
-4. **O4: Safe monthly EMI ceiling?** Providing tenure trade-offs and a downside macro stress simulation.
-5. **The Branch Negotiation Card:** A single, high-impact screen that the borrower can hold up to a branch manager or loan agent to push back on extortionate rates.
+3. **O3: Fair interest rate band?** Providing a risk-adjusted reducing benchmark anchored to the RBI repo rate (5.25%) and true all-in APR.
+4. **O4: Safe monthly EMI ceiling?** Providing tenure trade-offs and a -25% income & +150 bps rate shock stress simulation.
+5. **The Branch Negotiation Card:** A single, high-impact screen that the borrower can hold up to a branch manager or loan agent to push back on elevated rates.
 
 ---
 
@@ -23,59 +23,65 @@ Lenders in India evaluate retail borrowers using proprietary risk scorecards, au
 The application is structured to ensure that **domain rules are completely decoupled from UI rendering**. This directly satisfies the recruiter evaluation requirement: *"In the follow-up we will ask you to change a rule live."*
 
 ```
-src/
-├── app/                     # NEXT.JS 15 APP ROUTER
-│   ├── layout.tsx           # Root layout, Google Fonts (Newsreader, Source Sans, Plex Mono)
-│   ├── page.tsx             # Main page entry point
-│   └── globals.css          # Tailwind CSS + Apple-grade Liquid Glass utility styles
-│
-├── domain/                  # 100% PURE TYPESCRIPT LOGIC (Zero Framework/DOM dependencies)
-│   ├── types.ts             # Strict domain schemas (Profile, Outputs, Rules)
-│   ├── rulesData.ts         # Master registry of 18+ credit underwriting rules
-│   ├── affordability.ts     # FOIR ceilings, NDI, and safe carry math
-│   ├── sanction.ts          # Bank underwriting limits vs safe carry separation
-│   ├── pricing.ts           # Risk spreads, product routing, and monotonic APR solver
-│   ├── verdict.ts           # 3-way decision tree (Borrow / Less / Don't)
-│   ├── stressTest.ts        # 20% income contraction & +200 bps rate shock
-│   ├── engine.ts            # Orchestrator & confidence calculator
-│   └── presets.ts           # Verified test profiles (Priya, Ravi, Anita)
-│
-├── components/              # CLIENT UI LAYER (Liquid Glass Aesthetics)
-│   ├── LiquidGlass.tsx      # Apple-inspired frosted glass approximation
-│   ├── Header.tsx           # Brand header, theme toggle, rules inspector trigger
-│   ├── PersonaSelector.tsx  # 1-click test benchmark cards
-│   ├── AdaptiveForm.tsx     # Tier 1 (Must) & Tier 2 (Adaptive) questionnaire
-│   ├── OutputsDashboard.tsx # The 4 Core Output cards with stress toggles
-│   ├── NegotiationCard.tsx  # Printable one-page branch negotiation sheet
-│   └── RulesInspectorModal.tsx # Live rules inspector drawer
-│
-└── test/
-    └── runTests.ts          # Automated assertion suite validating all 3 personas
+app/
+  layout.tsx              Root layout, typography, BorrowerProvider context
+  page.tsx                Landing page explaining the 4 outputs + Start button
+  assess/
+    page.tsx              Adaptive question wizard with dynamic confidence meter
+  result/
+    page.tsx              Outputs dashboard (O1 to O4) + Negotiation Card
+
+lib/
+  engine/                 100% PURE TYPESCRIPT LOGIC (Zero React/DOM dependencies)
+    schema.ts             BorrowerProfile shape, derived metrics, and outputs
+    questions.ts          9 must-questions and 11 adaptive calibration questions
+    confidence.ts         Countable question ratio driving wide, medium, narrow bands
+    rules/
+      segments.ts         Assessed income formulas by segment with volatility haircuts
+      foir.ts             FOIR caps table and risk adjustments
+      amount.ts           O2 lender sanction vs safe amount calculations
+      rate.ts             O3 rate bands over repo + stability discounts + APR
+      emi.ts              O4 reverse EMI formula, tenure matrix, and stress test
+      decision.ts         O1 hard-block (H1-H4) and soft-caution (S1-S3) checks
+    card.ts               Assembles the 8-item Negotiation Card
+
+components/
+  wizard/                 QuestionStep, ProgressConfidenceBar
+  results/                VerdictBanner, AmountComparisonCard, RateBandCard, EmiCeilingCard, StressToggle, NegotiationCard
+  dev/                    PersonaQuickLoad (pre-fills Priya, Ravi, Anita for 1-click testing)
+
+data/
+  rules-config.ts         Single source of numeric constants (repo rate, FOIR caps, LTVs, spreads)
+
+docs/
+  RULES.md                Complete rules table matching rules-config.ts verbatim
+  walkthroughs/           Priya, Ravi, and Anita worked examples
 ```
 
 ---
 
 ## 3. How the Engine Solves the Three Benchmark Personas
 
-| Dimension | Priya (Salaried MNC, 29) | Ravi (Kirana Owner, 42) | Anita (Informal Gig, 35) |
+| Dimension | Priya (Salaried, Bengaluru) | Ravi (Self-Employed, Mysuru) | Anita (Informal Gig, Hubballi) |
 | :--- | :--- | :--- | :--- |
-| **Profile Archetype** | Prime Salaried, 780 CIBIL, ₹1.10L/mo, ₹14k car loan, rents ₹28k | Self-employed, ₹40k-80k cash, ITR ₹4.2L/yr, unencumbered ₹45L shop, No CIBIL | Informal gig rider & tailor, ₹26k-30k/mo, 3 app loans @ 30%+, 1 bounce |
-| **Loan Ask** | ₹8,00,000 (Wedding) | ₹15,00,000 (Stock & Delivery Van) | ₹1,50,000 (Electric Delivery Scooter) |
-| **O1 Verdict** | **`BORROW`** (Prime negotiating power) | **`BORROW`** (Exclusively via Secured LAP) | **`DONT_BORROW`** (Debt spiral risk) |
-| **O2 Sanction vs Safe Carry** | Bank sanctions **₹17.95L**; Safe carry is **₹15.15L**. Recommended: Use Safe Carry, cap at ₹8L ask. | Unsecured bank sanction is only **₹4.40L** (rejected). Secured LAP sanction is **₹24.75L**. Recommended: ₹15L LAP. | Instant apps sanction **₹65k** at 36% flat. Safe carry is **₹0 fresh debt** until app loans cleared. |
-| **O3 Product Routing & Rate** | Personal Loan @ **10.50% - 11.75%** (APR: 11.32% - 13.21%) | Routed to LAP @ **9.25% - 11.00%** (Saving 1,000+ bps vs unsecured credit) | Commercial EV Asset Loan @ **13.50% - 16.50%** (with PM e-Drive subsidy) |
-| **O4 Safe EMI Ceiling** | **₹39,250 / mo** (36-mo EMI is ₹26,005; FOIR 36%) | **₹52,700 / mo** (84-mo LAP EMI is ₹25,480; FOIR 28%) | **₹1,200 / mo** (Cannot service fresh ₹5,200 EMI without default) |
-| **Key Negotiation Script** | "780 CIBIL + MNC salary = Tier-1 prime grid; cap fee at 1.0% and waive login charges." | "Pledging ₹45L shop at <35% LTV = zero bank risk; quote 9.5% repo-linked EBLR, not unsecured." | "Consolidate ₹35k app debt via MFI at 18%-22%; apply for subsidized EV asset lease." |
+| **Profile Archetype** | Prime Salaried, 790 CIBIL, ₹1.10L/mo, ₹14k car loan, 5 yrs vintage | Self-employed, ₹4.2L ITR + ₹60k/mo cash, ₹45L shop premises, unscored | Informal gig rider & tailor, ₹25k-₹31k/mo, 3 app loans @ 30%+, recent bounce |
+| **Loan Ask** | ₹8,00,000 (Wedding) | ₹15,00,000 (Commercial Vehicle Fleet) | ₹45,000 (Two-Wheeler Scooter) |
+| **O1 Verdict** | **`Borrow`** (Comfortable safe capacity) | **`Borrow less`** (Sizing correction individually) | **`Don't borrow now`** (Active debt distress) |
+| **O2 Sanction vs Safe Carry** | Safe capacity is **₹10,72,000**; Lender sanction is **₹14,04,000**. Recommendation: Use ₹8,00,000 ask. | Individual safe is **₹6,59,000**; Individual lender sanction is **₹9,88,000**. Co-applicant spouse bridges to **₹17,16,000** (covers ₹15L). | Instant apps sanction ₹65k at 36%. Safe fresh borrowing is **₹0 fresh debt** until existing app loans are cleared. |
+| **O3 Product & Fair Rate** | Personal Loan Prime @ **11.25% - 14.25%** (Target: 11.80%, APR: 12.39%) | Routed to Secured Business / LAP @ **10.25% - 14.25%** (Target: 11.35%, APR: 11.60%) | High-cost warning (existing loans >24% threshold). Fresh debt deferred. |
+| **O4 Safe EMI Ceiling** | **₹35,503 / mo** (EMI for ₹8L ask is ₹26,500/mo; post-loan FOIR 36.8%) | **₹11,400 / mo** (at 7 years tenure on individual safe capacity). | **₹0 / mo** fresh debt. Existing EMIs consume 42.4% of income. |
+| **Key Negotiation Script** | "790 CIBIL + 5 yrs MNC tenure = prime relationship grid; match 11.8% and cap fee at 1.0%." | "Pledging ₹45L commercial shop at <35% LTV; applying jointly with spouse to cover ₹15L at secured 11.35% LAP pricing." | "Refinance ₹35k app debt via microfinance at 18%-22% reducing; maintain 6 months clean repayment." |
 
 ---
 
 ## 4. Live Rule Defense & How to Modify Rules Live
 
 During technical evaluation, when asked to change an assumption live:
-1. **Change FOIR Ceiling**: Open `src/domain/affordability.ts` → `getFoirCeiling()`. Adjust salaried cap from `55%` to `50%`. The app updates immediately via Vite HMR.
-2. **Change Benchmark Rates**: Open `src/domain/pricing.ts` → `determinePricingAndRouting()`. Adjust repo spread from `10.5%` to `9.9%`.
-3. **Change Distress Triggers**: Open `src/domain/verdict.ts` → `determineVerdict()`. Adjust app loan count threshold from `3` to `2`.
-4. Run `npm test` in the terminal to verify the automated test suite against the updated rules.
+1. **The Single Source of Truth**: Open `data/rules-config.ts`.
+2. **Change Repo Rate**: Change `REPO_RATE: 5.25` to `REPO_RATE: 5.50`. All product rate bands and APR calculations immediately shift across the app.
+3. **Change FOIR Ceiling**: Change `FOIR_CAPS.salaried.over75k.lenderCap: 0.55` to `0.50`. All maximum amounts recompute instantly on the next render.
+4. **Change Stress Test Shocks**: Change `STRESS_TEST.incomeShockPercent: -0.25` to `-0.30`.
+5. Run `npm test` in the terminal to verify the automated test suite against the updated rules.
 
 ---
 
@@ -87,20 +93,14 @@ During technical evaluation, when asked to change an assumption live:
 2. **Sanction Letter & KFS OCR Scanner**:
    - Let borrowers photograph or upload a PDF sanction letter received from a bank.
    - The engine automatically parses hidden flat rates, bundled insurance, and processing fees, outputting an instant "True Cost Audit" comparing the bank's quote to Borrower Copilot benchmarks.
-3. **Multi-Lingual Vernacular Audio Prompts**:
-   - For informal borrowers like Anita and semi-formal shopkeepers like Ravi, localized voice prompts in Kannada, Hindi, Tamil, and Marathi ensure financial literacy without English reading barriers.
-4. **Bank Branch Geo-Benchmarking**:
-   - Aggregate verified branch pricing from public PSU and private banks within the borrower's pin code (e.g. SBI Mysuru Main vs Canara Bank vs HDFC) to provide exact branch coordinates where fair rates are currently being sanctioned.
+3. **Multi-Lingual Vernacular Prompts**:
+   - For informal borrowers like Anita and semi-formal shopkeepers like Ravi, localized prompts in Kannada, Hindi, Tamil, and Telugu remove English literacy barriers.
 
 ---
 
 ## 6. What We Would Cut (Ruthless Product Discipline)
 
 1. **Cut Black-Box Machine Learning Models**:
-   - Machine learning algorithms are non-deterministic, hard to explain in branches, and prone to socio-economic bias.
-   - For credit negotiation, borrowers need **deterministic, auditable rules** where every number can be justified in a single sentence to a bank manager.
-2. **Cut User Accounts & Login Walls**:
-   - Requiring mobile OTP, phone numbers, or passwords introduces high drop-off and privacy concerns.
-   - Retail borrowers are paranoid about data theft and spam calls from DSA agents; keeping the tool 100% anonymous and client-side builds unassailable trust.
-3. **Cut Niche, Low-Volume Credit Products**:
-   - Do not bloat the engine with education loans, luxury yacht loans, or credit card balance transfers. Focus deeply on the four high-frequency retail products: Personal Loans, LAP/MSME Mortgages, Vehicle/EV loans, and Gold loans.
+   - Machine learning algorithms are non-deterministic, hard to explain in branches, and prone to socio-economic bias. Pure deterministic rules with documented tables build unshakeable borrower confidence.
+2. **Cut User Accounts & Central Databases**:
+   - Storing user PAN, bureau data, or payslips creates regulatory liability under the Digital Personal Data Protection Act (DPDPA 2023). Running 100% client-side in the borrower's browser guarantees complete data privacy by design.
